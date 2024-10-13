@@ -1,24 +1,28 @@
-
-import { useEffect, useState } from 'react';
-import Places from './Places.jsx';
-
+import { useEffect, useState } from "react";
+import Places from "./Places.jsx";
 
 // const places = localStorage.getItem('places');
 
 export default function AvailablePlaces({ onSelectPlace }) {
+  const [availablePlaces, setAvailablePlaces] = useState([]);
+  // useEffect(() => {
+  //   fetch('http://localHost:3000/places').then((response) => {
+  //     return response.json()
+  //   })
+  //   .then((resData) => {
+  //     setAvailablePlaces(resData.places)
+  //   })
+  // }, [])
 
-const [availablePlaces, setAvailablePlaces] = useState([]);
-useEffect(() => {
-  fetch('http://localHost:3000/places').then((response) => {
-    return response.json()
-  })
-  .then((resData) => {
-    setAvailablePlaces(resData.places)
-  })
-}, [])
+  useEffect(() => {
+    async function fetchPlaces() {
+      const response = await fetch("http://localHost:3000/places");
+      const resData = await response.json();
+      setAvailablePlaces(resData.places);
+    }
 
-
-
+    fetchPlaces();
+  }, []);
 
   return (
     <Places
