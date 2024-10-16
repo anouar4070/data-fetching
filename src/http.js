@@ -25,6 +25,30 @@ export async function updateUserPlaces(places) {
   return resData.message;
 }
 
+
+export async function fetchUserPlaces() {
+  const response = await fetch("http://localHost:3000/user-places");
+  const resData = await response.json();
+
+  if (!response.ok) {
+    throw new Error("Failed to fetch user places");
+  }
+
+  return resData.places;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
 /**
  * When an error is thrown, the function immediately stops executing, and the error is handled by any error handling mechanisms in place (e.g., a try...catch block).
  *
