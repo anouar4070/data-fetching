@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import Places from "./Places.jsx";
 import Error from "./Error.jsx";
+import { sortPlacesByDistance } from "../loc.js";
 
 // const places = localStorage.getItem('places');
 
@@ -14,27 +15,37 @@ export default function AvailablePlaces({ onSelectPlace }) {
       setIsFetching(true);
 
       try {
-        const response = await fetch("http://localHost:3000/placesss");
+        const response = await fetch("http://localHost:3000/places");
         const resData = await response.json();
 
         if (!response.ok) {
           throw new Error("Failed to fetch places");
         }
 
-        setAvailablePlaces(resData.places);
+        navigator.geolocation.getCurrentPosition((position) => {
+          const sortedPlaces = sortPlacesByDistance(
+            resData.places,
+            position.coords.latitude,
+            position.coords.longitude
+          );
+          setAvailablePlaces(sortedPlaces);
+          setIsFetching(false);
+        });
       } catch (error) {
         //the error handler catches all errors and uses the default message "could not fetch places, please try again later." if no specific error message is available.
-        setError({message: error.message || 'could not fetch places, please try again later.'});
+        setError({
+          message:
+            error.message || "could not fetch places, please try again later.",
+        });
+        setIsFetching(false);
       }
-
-      setIsFetching(false);
     }
 
     fetchPlaces();
   }, []);
 
-  if(error) {
-    return <Error title="An error occured!" message={error.message} />
+  if (error) {
+    return <Error title="An error occured!" message={error.message} />;
   }
 
   return (
@@ -49,12 +60,11 @@ export default function AvailablePlaces({ onSelectPlace }) {
   );
 }
 
-
-  // useEffect(() => {
-  //   fetch('http://localHost:3000/places').then((response) => {
-  //     return response.json()
-  //   })
-  //   .then((resData) => {
-  //     setAvailablePlaces(resData.places)
-  //   })
-  // }, [])
+// useEffect(() => {
+//   fetch('http://localHost:3000/places').then((response) => {
+//     return response.json()
+//   })
+//   .then((resData) => {
+//     setAvailablePlaces(resData.places)
+//   })
+// }, [])
