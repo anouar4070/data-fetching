@@ -19,7 +19,7 @@ function App() {
     isFetching,
     error,
     fetchedData: userPlaces,
-    setFetchedData: setUserPlaces
+    setFetchedData: setUserPlaces,
   } = useFetch(fetchUserPlaces, []);
 
   function handleStartRemovePlace(place) {
@@ -120,18 +120,13 @@ function App() {
           />
         )}
 
-        <AvailablePlaces
-          onSelectPlace={handleSelectPlace}
-        />
+        <AvailablePlaces onSelectPlace={handleSelectPlace} />
       </main>
     </>
   );
 }
 
 export default App;
-
-
-
 
 //& code without use of Custom Hook
 
